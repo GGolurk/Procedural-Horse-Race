@@ -1,14 +1,17 @@
 #include <iostream>
-#include <random>
+#include <cstdlib>
 
 const int TRACK_LENGTH = 15;
 const int NUM_HORSES = 5;
 
 void printTrack(int, int);
-/*void moveHorse(int*);
-void determineWinner(int, int*);*/
+void moveHorse(int, int*);
+bool determineWinner(int*);
 
 int main(){
+	// Seeding the random number generator.
+	srand(time(NULL));
+
 	// Defining the horse positions.
 	int horses[] = {0, 0, 0, 0, 0};
 	
@@ -19,20 +22,23 @@ int main(){
 		printTrack(i, horses[i]);
 	} // End for
 
-	int testing = 0;
+	// Initiating the best sentry variable.
 	bool keepGoing = true;
-	while(keepGoing == true && testing < 100){
-		testing += 1;
-		char choice[] = {};
-		std::cout << "Hit enter to continue, or 'q' to quit." << std::endl;
+	while(keepGoing == true){
+		// It took me too long to remember how to use strings... even though I wrote it in my notes!
+		std::string choice;
+		std::cout << "Hit enter to continue." << std::endl;
 		std::cin.ignore();
-		std::cin >> choice;
-		// Error here, figuring out.
-		if(choice[0] != "q"){
-			keepGoing = true;
-		} else {
-			keepGoing = false;
-		}
+		// Using getline here because cin was uncooperative.
+		getline(std::cin, choice);
+
+		// Displays the current standings, after updating them.
+		std::cout << "CURRENT STANDINGS" << std::endl;
+		for(int j = 0; j < NUM_HORSES; j++){
+			moveHorse(j, horses);
+			printTrack(j, horses[j]);
+		} // End for
+		keepGoing = determineWinner(horses);
 	}
 
 	return 0;
@@ -53,3 +59,26 @@ void printTrack(int horse, int position){
 } // End printTrack
 
 
+// Has a a 50% chance of moving a horse one time.
+void moveHorse(int horse, int* position){
+	// Gets a random number.
+	int random = rand();
+	// Uses the modulus operator to get one of two outcomes from the random number generator.
+	if(random % 2 == 0){
+		position[horse]++;
+	} // End if
+} // End moveHorses
+
+// Determines if a horse has won.
+bool determineWinner(int* position){
+	bool result = true;
+	for(int i = 0; i < NUM_HORSES; i++){
+		// Tests if the horse position is past the track.
+		if(position[i] >= TRACK_LENGTH){
+			// Returns result to keepGoing as false, and celebrates the victory of one horse.
+			result = false;
+			std::cout << "HORSE " << i << " WINS!" << std::endl;
+		} // End if
+	} // End for
+	return result;
+} // End determineWinner

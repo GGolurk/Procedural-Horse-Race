@@ -5,6 +5,7 @@ Algorithm:
 Include iostream and random
 
 const TRACK LENGTH = 15
+const NUM HORSES = 5
 
 main {
 	// holds the position for each horse
@@ -17,22 +18,21 @@ main {
 		
 		hit enter to continue		
 
-		for loop 5 times{	
+		for loop NUM HORSES times{	
 			// this is using the for loop sentry variable as the horse numbers
-			flip the coin(horses[for loop var])	
+			flip the coin(for loop var, horses)	
 			print the track(for loop var, horses[for loop var])
 		} end for
-		// I split this into two for loops so that it prints the track before printing the winners
-		for loop 5 times{
-			keepGoing = determine winner(for loop var, horses[for loop var])
-		} end for
+		// It's probably better to have the for loop inside the functions rather than outside, but I didn't think of that until after I started coding. Oopsies!
+		keepGoing = determine winner(horses[])
 	} end while
 
 } end main
 
-flip the coin(position){
+flip the coin(horse, position){
+
 	if coinflip is heads{
-		position++
+		position[horse]++
 	} end if
 } end coin flip
 
@@ -46,11 +46,13 @@ print the track(horse number, horse progress){
 	} end for
 } end track printing
 
-bool determine winner(num, position){
-	result = false	
-	if position > TRACK LENGTH{
-		result = true
-		print "Horse {num} wins!"
-	} end if
+bool determine winner(position){
+	result = true
+	for i in NUM HORSES{	
+		if position[i] >= TRACK LENGTH{
+			result = true
+			print "Horse {num} wins!"
+		} end if
+	}
 	return result
 } end determine winner
